@@ -1,5 +1,8 @@
+from django.conf import settings
 from django.core.files.storage import Storage
 from django.core.files.base import ContentFile
+from django.utils.encoding import filepath_to_uri, force_text
+from django.utils.six.moves.urllib.parse import urljoin
 
 class PathDoesNotExist(Exception):
     pass
@@ -98,16 +101,20 @@ class InMemoryStorage(Storage):
         return self.filesystem.listdir(dir)
 
     def delete(self, path):
-        return self.filesystem.delete(path)
+        return self.filesystem.delete(force_text(path))
 
     def exists(self, name):
-        return self.filesystem.exists(name)
+        return self.filesystem.exists(force_text(name))
 
     def size(self, name):
-        return self.filesystem.size(name)
+        return self.filesystem.size(force_text(name))
+
+    def url(self, name):
+        base_url = settings.MEDIA_URL
+        return urljoin(base_url, filepath_to_uri(name))
 
     def _open(self, name, mode=None):
-        return self.filesystem.open(name)
+        return self.filesystem.open(force_text(name))
 
     def _save(self, name, content):
         return self.filesystem.save(name, content.read())
