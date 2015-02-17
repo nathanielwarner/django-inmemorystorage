@@ -110,4 +110,5 @@ class InMemoryStorage(Storage):
         return self.filesystem.open(name)
 
     def _save(self, name, content):
-        return self.filesystem.save(name, content.read())
+        data = b''.join(list(content.chunks()))
+        return self.filesystem.save(name, data)
