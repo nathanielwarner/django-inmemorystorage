@@ -62,7 +62,10 @@ class InMemoryDir(InMemoryNode):
         return [dirs, files]
 
     def delete(self, path):
-        node = self.resolve(path)
+        try:
+            node = self.resolve(path)
+        except PathDoesNotExist:
+            return
         for name, child in node.parent.children.iteritems():
             if child is node:
                 del node.parent.children[name]
