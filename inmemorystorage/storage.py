@@ -2,7 +2,7 @@ from django.conf import settings
 from django.core.files.storage import Storage
 from django.core.files.base import ContentFile
 from django.utils.encoding import filepath_to_uri, force_text
-from django.utils.six.moves.urllib.parse import urljoin
+from urllib.parse import urljoin
 
 class PathDoesNotExist(Exception):
     pass
