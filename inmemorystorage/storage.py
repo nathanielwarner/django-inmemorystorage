@@ -97,8 +97,9 @@ class InMemoryStorage(Storage):
     """
     Django storage class for in-memory filesystem.
     """
-    def __init__(self, filesystem=None):
+    def __init__(self, filesystem=None, base_url=None):
         self.filesystem = filesystem or InMemoryDir()
+        self.base_url = base_url or settings.MEDIA_URL
 
     def listdir(self, dir):
         return self.filesystem.listdir(dir)
@@ -113,8 +114,7 @@ class InMemoryStorage(Storage):
         return self.filesystem.size(force_text(name))
 
     def url(self, name):
-        base_url = settings.MEDIA_URL
-        return urljoin(base_url, filepath_to_uri(name))
+        return urljoin(self.base_url, filepath_to_uri(name))
 
     def _open(self, name, mode=None):
         return self.filesystem.open(force_text(name))
